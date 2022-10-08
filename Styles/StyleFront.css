@@ -3,9 +3,8 @@
     margin: 0;
 }
 #GCanvas{
-    height: 550px;
-    width: 500px;
-    border: 2px solid black;
+    height: 100%;
+    width: 100%;
     position: absolute;
     overflow: hidden;
     transform: translate(-50%, -50%);
