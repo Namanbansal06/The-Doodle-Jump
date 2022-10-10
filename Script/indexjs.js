@@ -87,17 +87,52 @@ window.addEventListener('load', () => {
     class Player{
         constructor(game){
             this.game = game;
+            this.sizeModifier = 0.2;
+            this.width = 395 * this.sizeModifier;
+            this.height = 488 * this.sizeModifier;
+            this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
+            this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
             this.image = document.getElementById('player1');
+            this.vx = 0;
+            this.max_vx = 8;
+        }
 
+        update(inputHandler){
+            this.x +=this.vx;
+            if(inputHandler.keys.includes('ArrowLeft')){
+                this.vx = -this.max_vx;
+            }
+            else if(inputHandler.keys.includes('ArrowRight')){
+                this.vx = this.max_vx;
+            }
+            else{
+                this.vx = 0;
+            }
+        }
+
+        draw(context){
+            context.drawImage(this.image,this.x, this.y, this.width, this.height);
         }
     }
 
     class InputHandler{
         constructor(game){
+            this.keys = [];
             this.game = game;
             
             window.addEventListener('keydown', (e) =>{
-                this.game.gameStart = true;
+                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && this.keys.includes(e.key)){
+                    this.keys.push(e.key)
+                }
+                if(e.key == 'Enter'){
+                    this.game.gameStart = true;
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && this.keys.includes(e.key)){
+                    this.keys.splice(this.keys.indexOf(e.key), 1);
+                }
             });
         }
     }
