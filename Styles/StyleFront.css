@@ -1,15 +1,16 @@
 html, body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-  }
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background-color: burlywood;
+}
 
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  canvas {
-    border: 1px solid black;
-  }
+canvas {
+  border: 1px solid black;
+}
