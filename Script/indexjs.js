@@ -11,9 +11,17 @@ function Ball(x,y,dy,dx,r){
     this.dx=dx;
     var key=false;
     var playerdir=0;
+    const dd=0.3;
     this.update=function(){
-        if(this.y+this.r>canvas.height){
-            this.dy=-this.dy;
+        if(this.x<canvas.width/2-200+400 &&
+        this.x+this.r>canvas.width/2-200&&
+        this.y<500+40&&
+        this.y+this.r>500
+        ){
+            this.dy=-(this.dy);
+        }
+        else if(this.y+this.r>canvas.height){
+          this.dy=-this.dy;
         }
         else{
             this.dy+=1;
@@ -42,16 +50,18 @@ function Ball(x,y,dy,dx,r){
           });
 
           if (!key) {
-            if (playerDir < 0) {
-              if (this.x > 0) {
-                this.x = 0;
-                playerDir = 0;
+            if (playerdir < 0) {
+              this.dx+=dd;
+              if (this.dx > 0) {
+                this.dx = 0;
+                playerdir = 0;
               }
             }
-            else if (playerDir > 0) {
+            else if (playerdir > 0) {
+              this.dx-=dd;
               if (this.dx < 0) {
                 this.dx = 0;
-                playerDir = 0;
+                playerdir = 0;
               }
             }
           }
@@ -69,6 +79,12 @@ function Ball(x,y,dy,dx,r){
       c.arc(this.x,this.y,this.r,0,Math.PI*2,0);
       c.fill();
       c.closePath();
+
+      // c.beginPath();
+      // c.fillStyle='green';
+      // c.fillRect(canvas.width/2-200,400,400,40);
+      // c.fill();
+      // c.closePath();
     };
 }
 var ball;
@@ -82,27 +98,41 @@ var bar_width;
 var bar_x;
 var bar_y;
 function Bar(bar_x,bar_y,bar_width,bar_height){
-  update1=function(){
-    draw1();
+  this.bar_x=bar_x;
+  this.bar_y=bar_y;
+  this.bar_width=bar_width;
+  this.bar_height=bar_height;
+  this.update1=function(){
+    this.draw1();
+    //console.log("naman");
   }
-  draw1=function(){
+  this.draw1=function(){
     c.beginPath();
       c.fillStyle='green';
-      c.fillRect(bar_x,bar_y,bar_width,bar_height);
+      c.fillRect(this.bar_x,this.bar_y,this.bar_width,this.bar_height);
       c.fill();
       c.closePath();
   };
 }
 var bar;
 function init2(){
-  bar=new Bar(canvas.width/2,500,100,100)
+  bar=new Bar(canvas.width/2-200,500,400,40)
+}
+
+function collision(){
+  if(this.x<this.bar_x+this.bar_width &&
+    this.x+this.r>this.bar_x&&
+    this.y<this.bar_y+this.height&&
+    this.y+this.r>this.bar_y){
+      this.dy=-this.dy;
+    }
 }
 function animate(){
     requestAnimationFrame(animate);
     c.clearRect(0,0,canvas.width,canvas.height);
     ball.update();
-    //bar.update1();
+    bar.update1();
 }
 init();
+init2();
 animate();
-//init2();
