@@ -108,6 +108,13 @@ window.addEventListener('load', () => {
             else{
                 this.vx = 0;
             }
+
+            if(this.x < -this.width/2){
+                this.x = this.game.width - (this.width/2);
+            }
+            if(this.x + (this.width/2) > this.game.width) {
+                this.x = (-this.width/2);
+            }
         }
 
         draw(context){
