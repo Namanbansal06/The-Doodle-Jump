@@ -84,12 +84,55 @@ window.addEventListener('load', () => {
         }
     }
 
+    class Player{
+        constructor(game){
+            this.game = game;
+            this.sizeModifier = 0.2;
+            this.width = 395 * this.sizeModifier;
+            this.height = 488 * this.sizeModifier;
+            this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
+            this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
+            this.image = document.getElementById('player1');
+            this.vx = 0;
+            this.max_vx = 8;
+        }
+
+        update(inputHandler){
+            this.x +=this.vx;
+            if(inputHandler.keys.includes('ArrowLeft')){
+                this.vx = -this.max_vx;
+            }
+            else if(inputHandler.keys.includes('ArrowRight')){
+                this.vx = this.max_vx;
+            }
+            else{
+                this.vx = 0;
+            }
+        }
+
+        draw(context){
+            context.drawImage(this.image,this.x, this.y, this.width, this.height);
+        }
+    }
+
     class InputHandler{
         constructor(game){
+            this.keys = [];
             this.game = game;
             
             window.addEventListener('keydown', (e) =>{
-                this.game.gameStart = true;
+                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && !this.keys.includes(e.key)){
+                    this.keys.push(e.key)
+                }
+                if(e.key == 'Enter'){
+                    this.game.gameStart = true;
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && this.keys.includes(e.key)){
+                    this.keys.splice(this.keys.indexOf(e.key), 1);
+                }
             });
         }
     }
@@ -102,10 +145,11 @@ window.addEventListener('load', () => {
             this.platforms = [];
             this.object_vx = 3;
             this.platform_gap = 65;
-            this.blue_white_platform_chance = 30;
+            this.blue_white_platform_chance = 20;
             this.add_platforms(0, this.height-15);
             this.add_platforms(-this.height, -15);
             this.background = new Background(this); 
+            this.player = new Player(this);
             this.inputHandler = new InputHandler(this);
             
         }
@@ -116,6 +160,10 @@ window.addEventListener('load', () => {
             this.platforms.forEach(platform =>{
                 platform.update();
             });
+
+            this.player.update(this.inputHandler);
+
+            this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
         }
     
         draw(context){
@@ -131,6 +179,8 @@ window.addEventListener('load', () => {
                 this.platforms.forEach(platform => {
                     platform.draw(context);
                 });
+
+                this.player.draw(context);
             }
         }
 
@@ -143,6 +193,7 @@ window.addEventListener('load', () => {
                 this.platforms.unshift(new Platform(this, lowerY, upperY, type));
             }while(this.platforms[0].y >= lowerY);
         }
+        
     }
     
     const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
