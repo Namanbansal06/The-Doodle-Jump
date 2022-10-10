@@ -84,6 +84,14 @@ window.addEventListener('load', () => {
         }
     }
 
+    class Player{
+        constructor(game){
+            this.game = game;
+            this.image = document.getElementById('player1');
+
+        }
+    }
+
     class InputHandler{
         constructor(game){
             this.game = game;
@@ -102,10 +110,11 @@ window.addEventListener('load', () => {
             this.platforms = [];
             this.object_vx = 3;
             this.platform_gap = 65;
-            this.blue_white_platform_chance = 30;
+            this.blue_white_platform_chance = 20;
             this.add_platforms(0, this.height-15);
             this.add_platforms(-this.height, -15);
             this.background = new Background(this); 
+            this.player = new Player(this);
             this.inputHandler = new InputHandler(this);
             
         }
@@ -116,6 +125,10 @@ window.addEventListener('load', () => {
             this.platforms.forEach(platform =>{
                 platform.update();
             });
+
+            this.player.update(this.inputHandler);
+
+            this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
         }
     
         draw(context){
@@ -131,6 +144,8 @@ window.addEventListener('load', () => {
                 this.platforms.forEach(platform => {
                     platform.draw(context);
                 });
+
+                this.player.draw(context);
             }
         }
 
@@ -143,6 +158,7 @@ window.addEventListener('load', () => {
                 this.platforms.unshift(new Platform(this, lowerY, upperY, type));
             }while(this.platforms[0].y >= lowerY);
         }
+        
     }
     
     const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);

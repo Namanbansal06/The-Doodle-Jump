@@ -14,7 +14,7 @@
     left:50%;
     /* z-index: 5; */
 }
-#bgchange{
+/* #bgchange{
     position: absolute;
     font-size: 10px;
     top: 20px;
@@ -22,4 +22,8 @@
     width: 80px;
     height:30px;
     z-index: 10;
+} */
+
+img{
+    display: none;
 }
