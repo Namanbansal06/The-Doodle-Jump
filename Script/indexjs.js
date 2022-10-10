@@ -18,7 +18,6 @@ window.addEventListener('load', () => {
             this.width =1278;
             this.height = 680;
             this.image = document.getElementById('bg1');
-            this.speed = 2;
         }
         update(){
             if(this.y > this.height){
@@ -26,7 +25,7 @@ window.addEventListener('load', () => {
                 this.game.add_platforms(-this.height*2, -15);
             }
             else{
-                this.y += this.speed;
+                this.y += this.game.vy;
             }
         }
         draw(){
@@ -53,7 +52,7 @@ window.addEventListener('load', () => {
                 if(this.x < 0 || this.x > this.game.width - this.width) this.vx *= -1;
             }
             this.x += this.vx;
-            this.y += 3;
+            this.y += this.game.vy;
 
             if(this.y >= this.game.height){
                 this.markedForDeletion = true;
@@ -92,6 +91,11 @@ window.addEventListener('load', () => {
             this.height = 488 * this.sizeModifier;
             this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
             this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
+            this.min_y = (this.game.height/2)-30;
+            this.min_vy = -18;
+            this.max_vy = this.game.platforms[0].height;
+            this.vy = this.min_vy;
+            this.weight = 0.5;
             this.image = document.getElementById('player1');
             this.vx = 0;
             this.max_vx = 8;
@@ -118,6 +122,7 @@ window.addEventListener('load', () => {
         }
 
         draw(context){
+            context.strokeRect(this.x +15, this.y, this.width-30, this.height);
             context.drawImage(this.image,this.x, this.y, this.width, this.height);
         }
     }
@@ -148,6 +153,7 @@ window.addEventListener('load', () => {
         constructor(width, height){
             this.width = width;
             this.height  = height;
+            this.vy = 0;
             this.gameStart = false;
             this.platforms = [];
             this.object_vx = 3;
