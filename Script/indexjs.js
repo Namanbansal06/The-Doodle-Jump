@@ -119,11 +119,36 @@ window.addEventListener('load', () => {
             if(this.x + (this.width/2) > this.game.width) {
                 this.x = (-this.width/2);
             }
+
+            if(this.vy < this.max_vx){
+                this.vy += this.weight;
+            }
+            if(this.y > this.min_y || this.vy > this.weight){
+                this.y += this.vy;
+            }
+
+            if(this.y <= this.min_y && this.vy < this.width) this.game.vy = -this.vy;
+            else this.game.vy = 0;
         }
 
         draw(context){
-            context.strokeRect(this.x +15, this.y, this.width-30, this.height);
             context.drawImage(this.image,this.x, this.y, this.width, this.height);
+        }
+
+        onPlatform(){
+            lettype = null;
+            let playerHitBox = {x:this.x+15,y:this.y,width:this.width-30,height:this.height}
+
+            this.game.platforms.forEach((platform) =>{
+                const X_test = (playerHitBox.x > platform.x && playerHitBox.x < platform.x + platform.width) || (playerHitBox.x + playerHitBox.width > platform.x && playerHitBox.x + playerHitBox.width < platform.x + platform.width);
+                const Y_test = (platform.y - (playerHitBox.y + playerHitBox.height) <= 0) && (platform.y - (playerHitBox.y + playerHitBox.height) >= -platform.height);
+                
+                if(X_test && Y_test){
+                    type = platform.type;
+                }
+            });
+
+            return type;
         }
     }
 
