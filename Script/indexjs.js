@@ -93,7 +93,6 @@ window.addEventListener('load', () => {
             this.image = document.getElementById('player1');
             this.vx = 0;
             this.max_vx = 5;
-        }
 
         update(inputHandler){
             this.x +=this.vx;
@@ -129,6 +128,7 @@ window.addEventListener('load', () => {
             if(this.y <= this.min_y && this.vy < this.width){
                 this.game.vy = -this.vy;
             }
+            if(this.y <= this.min_y && this.vy < this.width) this.game.vy = -this.vy;
             else this.game.vy = 0;
         }
 
@@ -246,4 +246,3 @@ window.addEventListener('load', () => {
     }
     animate();
 });
-
