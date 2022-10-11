@@ -146,6 +146,7 @@ window.addEventListener('load', () => {
                 
                 if(X_test && Y_test){
                     type = platform.type;
+                    platform.markedForDeletion = (type == 'brown' || type == 'white') ? true : false;
                 }
             });
 
