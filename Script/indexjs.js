@@ -59,7 +59,6 @@ window.addEventListener('load', () => {
                 this.markedForDeletion = true;
             }
         }
-    
         draw(context){
             let k;
             if(this.type == 'green'){
@@ -83,7 +82,6 @@ window.addEventListener('load', () => {
             }
         }
     }
-
     class Player{
         constructor(game){
             this.game = game;
