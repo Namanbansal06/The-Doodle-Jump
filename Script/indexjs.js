@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
     const ctx = canvas.getContext('2d');
     const CANVAS_WIDTH = canvas.width = window.innerWidth;
     const CANVAS_HEIGHT = canvas.height = window.innerHeight;
-    
+
     class Background{
         constructor(game){
             this.game = game;
@@ -31,8 +31,8 @@ window.addEventListener('load', () => {
     class Platform{
         constructor(game, lowerY, upperY, type){
             this.game = game;
-            this.width = 121;
-            this.height = 35;
+            this.width = 120;
+            this.height = 30;
             this.type = type;
             this.x = Math.floor(Math.random()*((this.game.width-this.width) + 1));
             this.y =  this.calc_Y(upperY, lowerY);
@@ -80,7 +80,7 @@ window.addEventListener('load', () => {
     class Player{
         constructor(game){
             this.game = game;
-            this.sizeModifier = 0.2;
+            this.sizeModifier = 0.15;
             this.width = 395 * this.sizeModifier;
             this.height = 488 * this.sizeModifier;
             this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
@@ -92,8 +92,7 @@ window.addEventListener('load', () => {
             this.weight = 0.5;
             this.image = document.getElementById('player1');
             this.vx = 0;
-            this.max_vx = 8;
-        }
+            this.max_vx = 5;
 
         update(inputHandler){
             this.x +=this.vx;
@@ -114,13 +113,21 @@ window.addEventListener('load', () => {
                 this.x = (-this.width/2);
             }
 
-            if(this.vy < this.max_vx){
+            if(this.vy > this.weight){
+                let platformType = this.onPlatform();
+                if(platformType == 'white' || platformType == 'blue' || platformType == 'green') this.vy = this.min_vy;
+            }
+
+            if(this.vy < this.max_vy){
                 this.vy += this.weight;
             }
             if(this.y > this.min_y || this.vy > this.weight){
                 this.y += this.vy;
             }
 
+            if(this.y <= this.min_y && this.vy < this.width){
+                this.game.vy = -this.vy;
+            }
             if(this.y <= this.min_y && this.vy < this.width) this.game.vy = -this.vy;
             else this.game.vy = 0;
         }
@@ -130,7 +137,7 @@ window.addEventListener('load', () => {
         }
 
         onPlatform(){
-            lettype = null;
+            let type = null;
             let playerHitBox = {x:this.x+15,y:this.y,width:this.width-30,height:this.height}
 
             this.game.platforms.forEach((platform) =>{
@@ -176,7 +183,7 @@ window.addEventListener('load', () => {
             this.gameStart = false;
             this.platforms = [];
             this.object_vx = 3;
-            this.platform_gap = 65;
+            this.platform_gap = 55;
             this.blue_white_platform_chance = 20;
             this.add_platforms(0, this.height-15);
             this.add_platforms(-this.height, -15);
