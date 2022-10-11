@@ -93,7 +93,7 @@ window.addEventListener('load', () => {
             this.image = document.getElementById('player1');
             this.vx = 0;
             this.max_vx = 5;
-
+        }
         update(inputHandler){
             this.x +=this.vx;
             if(inputHandler.keys.includes('ArrowLeft')){
