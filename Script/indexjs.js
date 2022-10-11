@@ -3,13 +3,7 @@ window.addEventListener('load', () => {
     const ctx = canvas.getContext('2d');
     const CANVAS_WIDTH = canvas.width = window.innerWidth;
     const CANVAS_HEIGHT = canvas.height = window.innerHeight;
-    // let BGvalue=0;
-    // function changeBackground(){
-    //     if(BGvalue<2){
-    //         BGvalue++;        
-    //     }
-    //     else BGvalue=0;
-    // }
+    
     class Background{
         constructor(game){
             this.game = game;
@@ -18,7 +12,6 @@ window.addEventListener('load', () => {
             this.width =1278;
             this.height = 680;
             this.image = document.getElementById('bg1');
-            this.speed = 2;
         }
         update(){
             if(this.y > this.height){
@@ -26,7 +19,7 @@ window.addEventListener('load', () => {
                 this.game.add_platforms(-this.height*2, -15);
             }
             else{
-                this.y += this.speed;
+                this.y += this.game.vy;
             }
         }
         draw(){
@@ -53,12 +46,13 @@ window.addEventListener('load', () => {
                 if(this.x < 0 || this.x > this.game.width - this.width) this.vx *= -1;
             }
             this.x += this.vx;
-            this.y += 3;
+            this.y += this.game.vy;
 
             if(this.y >= this.game.height){
                 this.markedForDeletion = true;
             }
         }
+    
         draw(context){
             let k;
             if(this.type == 'green'){
@@ -82,6 +76,7 @@ window.addEventListener('load', () => {
             }
         }
     }
+
     class Player{
         constructor(game){
             this.game = game;
@@ -90,6 +85,11 @@ window.addEventListener('load', () => {
             this.height = 488 * this.sizeModifier;
             this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
             this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
+            this.min_y = (this.game.height/2)-30;
+            this.min_vy = -18;
+            this.max_vy = this.game.platforms[0].height;
+            this.vy = this.min_vy;
+            this.weight = 0.5;
             this.image = document.getElementById('player1');
             this.vx = 0;
             this.max_vx = 8;
@@ -106,10 +106,43 @@ window.addEventListener('load', () => {
             else{
                 this.vx = 0;
             }
+
+            if(this.x < -this.width/2){
+                this.x = this.game.width - (this.width/2);
+            }
+            if(this.x + (this.width/2) > this.game.width) {
+                this.x = (-this.width/2);
+            }
+
+            if(this.vy < this.max_vx){
+                this.vy += this.weight;
+            }
+            if(this.y > this.min_y || this.vy > this.weight){
+                this.y += this.vy;
+            }
+
+            if(this.y <= this.min_y && this.vy < this.width) this.game.vy = -this.vy;
+            else this.game.vy = 0;
         }
 
         draw(context){
             context.drawImage(this.image,this.x, this.y, this.width, this.height);
+        }
+
+        onPlatform(){
+            lettype = null;
+            let playerHitBox = {x:this.x+15,y:this.y,width:this.width-30,height:this.height}
+
+            this.game.platforms.forEach((platform) =>{
+                const X_test = (playerHitBox.x > platform.x && playerHitBox.x < platform.x + platform.width) || (playerHitBox.x + playerHitBox.width > platform.x && playerHitBox.x + playerHitBox.width < platform.x + platform.width);
+                const Y_test = (platform.y - (playerHitBox.y + playerHitBox.height) <= 0) && (platform.y - (playerHitBox.y + playerHitBox.height) >= -platform.height);
+                
+                if(X_test && Y_test){
+                    type = platform.type;
+                }
+            });
+
+            return type;
         }
     }
 
@@ -119,7 +152,7 @@ window.addEventListener('load', () => {
             this.game = game;
             
             window.addEventListener('keydown', (e) =>{
-                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && this.keys.includes(e.key)){
+                if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && !this.keys.includes(e.key)){
                     this.keys.push(e.key)
                 }
                 if(e.key == 'Enter'){
@@ -139,6 +172,7 @@ window.addEventListener('load', () => {
         constructor(width, height){
             this.width = width;
             this.height  = height;
+            this.vy = 0;
             this.gameStart = false;
             this.platforms = [];
             this.object_vx = 3;
@@ -204,4 +238,3 @@ window.addEventListener('load', () => {
     }
     animate();
 });
-
