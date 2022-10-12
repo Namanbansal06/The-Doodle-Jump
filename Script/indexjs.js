@@ -74,6 +74,7 @@ window.addEventListener('load', () => {
             }
         }
     }
+
     class Player{
         constructor(game){
             this.game = game;
@@ -90,7 +91,6 @@ window.addEventListener('load', () => {
             this.vx = 0;
             this.max_vx = 15;
         }
-
         update(inputHandler){
             this.x +=this.vx;
             if(inputHandler.keys.includes('ArrowLeft')){
