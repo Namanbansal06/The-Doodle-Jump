@@ -260,4 +260,3 @@ window.addEventListener('load', () => {
     }
     animate();
 });
-
