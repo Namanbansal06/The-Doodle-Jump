@@ -224,7 +224,6 @@ window.addEventListener('load', () => {
         }
         
     }
-    
     const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
