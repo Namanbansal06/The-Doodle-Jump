@@ -8,8 +8,8 @@ window.addEventListener('load', () => {
             this.game = game;
             this.x = 0;
             this.y = 0;
-            this.width =1278;
-            this.height = 680;
+            this.width =canvas.width;
+            this.height = canvas.height;
             this.image = document.getElementById('bg1');
         }
         update(){
@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
             this.width = 120;
             this.height = 30;
             this.type = type;
-            this.x = Math.floor(Math.random()*((this.game.width-this.width) +1));
+            this.x = Math.floor(Math.random()*((this.game.width-this.width)));
             this.y =  this.calc_Y(upperY, lowerY);
             this.vx = (this.type == 'blue') ? this.game.object_vx : 0;
             this.image = document.getElementById('tiles');
@@ -174,9 +174,9 @@ window.addEventListener('load', () => {
             this.platforms = [];
             this.object_vx = 3;
             this.platform_gap = 100;
-            this.blue_white_platform_chance = 30;
-            this.add_platforms(0, this.height-15);
-            this.add_platforms(-this.height, -15);
+            this.blue_white_platform_chance = 40;
+            this.add_platforms(0, this.height);
+            this.add_platforms(-this.height, 0);
             this.background = new Background(this); 
             this.player = new Player(this);
             this.inputHandler = new InputHandler(this);
