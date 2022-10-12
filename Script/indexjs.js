@@ -42,7 +42,7 @@ window.addEventListener('load', () => {
     
         update(){
             if(this.type == 'blue'){
-                if(this.x < 0 || this.x > this.game.width - this.width) this.vx *= -1;
+                if(this.x < 0 || this.x > this.game.width - this.width) this.vx = -this.vx;
             }
             this.x += this.vx;
             this.y += this.game.vy;
@@ -67,19 +67,18 @@ window.addEventListener('load', () => {
     
         calc_Y(upperY, lowerY){
             if(!this.game.platforms.length){
-                return Math.floor(Math.random() * (upperY - (upperY-100) + 1)) + (upperY-100);
+                return (upperY);
             }
             else{
-                return this.game.platforms[0].y - (Math.floor(Math.random() * (this.game.platform_gap  - (this.game.platform_gap - 30) + 1)) + (this.game.platform_gap - 30));
+                return this.game.platforms[0].y - (this.game.platform_gap);
             }
         }
     }
     class Player{
         constructor(game){
             this.game = game;
-            this.sizeModifier = 0.15;
-            this.width = 395 * this.sizeModifier;
-            this.height = 488 * this.sizeModifier;
+            this.width = 60;
+            this.height = 75;
             this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
             this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
             this.min_y = (this.game.height/2)-30;
@@ -127,6 +126,7 @@ window.addEventListener('load', () => {
         }
 
         draw(context){
+            // context.strokeRect(this.x+15,this.y,this.width-30,this.height);
             context.drawImage(this.image,this.x, this.y, this.width, this.height);
         }
         onPlatform(){
@@ -138,7 +138,7 @@ window.addEventListener('load', () => {
                 
                 if(X_test && Y_test){
                     type = platform.type;
-                    platform.markedForDeletion = (type == 'brown' || type == 'white') ? true : false;
+                    platform.markedForDeletion = (type == 'white') ? true : false;
                 }
             });
             return type;
@@ -224,7 +224,6 @@ window.addEventListener('load', () => {
         }
         
     }
-    
     const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
