@@ -3,6 +3,7 @@ window.addEventListener('load', () => {
     const ctx = canvas.getContext('2d');
     const CANVAS_WIDTH = canvas.width = window.innerWidth;
     const CANVAS_HEIGHT = canvas.height = window.innerHeight;
+    var s=1;
     class Background{
         constructor(game){
             this.game = game;
@@ -19,6 +20,7 @@ window.addEventListener('load', () => {
             }
             else{
                 this.y += this.game.vy;
+                this.game.scorept += Math.floor(this.game.vy);
             }
         }
         draw(){
@@ -192,9 +194,11 @@ window.addEventListener('load', () => {
             this.platforms = [];
             this.object_vx = 3;
             this.platform_gap = 55;
+            this.scorept = 0;
             this.blue_white_platform_chance = 20;
             this.add_platforms(0, this.height-30);
             this.add_platforms(-this.height, -30);
+            this.introimage = document.getElementById('intro');
             this.background = new Background(this); 
             this.player = new Player(this);
             this.inputHandler = new InputHandler(this);
@@ -211,21 +215,28 @@ window.addEventListener('load', () => {
 
             this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
         }
-    
         draw(context){
             this.background.draw(context);
 
             if(!this.gameStart){
-                context.font = "bold 30px Helvetica";
+                context.font = "bold 30px Arial";
                 context.fillStyle = "black";
                 context.textAlign = "center";
+                context.drawImage(this.introimage, 0, 0, innerWidth, innerHeight);
                 context.fillText("Press Enter to Start", this.width*0.5, this.height*0.5);
             }
             else if(this.player.y> this.width){
-                context.font = "bold 30px Helvetica";
-                context.fillStyle = "black";
+                if(s) {
+                    new Audio("Resources/Sounds/losing.wav").play();
+                    s=0;
+                }
+                context.font = "bold 70px Arial";
+                context.fillStyle = "Green";
                 context.textAlign = "center";
-                context.fillText("Game End, Load to Restart", this.width*0.5, this.height*0.5);
+                context.fillText(`Your Score is ${this.scorept}`, this.width*0.5, this.height*0.5);
+                context.font = "bold 30px Arial";
+                context.fillStyle = "black";
+                context.fillText(`Game End, Load to Restart`, this.width*0.5, this.height*0.5+40);
             }
             else{
                 this.platforms.forEach(platform => {
@@ -233,6 +244,11 @@ window.addEventListener('load', () => {
                 });
 
                 this.player.draw(context);
+
+                context.font = "bold 30px Arial";
+                context.fillStyle = "black";
+                context.textAlign = "start";
+                context.fillText(`Score: ${this.scorept}`, 20, 40);
             }
         }
 
