@@ -8,8 +8,8 @@ window.addEventListener('load', () => {
             this.game = game;
             this.x = 0;
             this.y = 0;
-            this.width =1278;
-            this.height = 680;
+            this.width =window.innerWidth;
+            this.height = window.innerHeight;
             this.image = document.getElementById('bg1');
         }
         update(){
