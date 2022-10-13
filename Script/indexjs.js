@@ -276,3 +276,4 @@ window.addEventListener('load', () => {
     }
     animate();
 });
+
