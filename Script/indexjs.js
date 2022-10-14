@@ -141,7 +141,7 @@ window.addEventListener('load', () => {
         }
 
         draw(context){
-            context.strokeRect(this.x+15, this.y, this.width-30, this.height);
+            // context.strokeRect(this.x+15, this.y, this.width-30, this.height);
             context.drawImage(this.image, 0, 0, 173, 235, this.x, this.y, this.width, this.height);
         }
 
