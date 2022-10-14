@@ -20,7 +20,9 @@ window.addEventListener('load', () => {
             }
             else{
                 this.y += this.game.vy;
-                this.game.scorept += Math.floor(this.game.vy);
+                if(this.game.vy>0){
+                    this.game.scorept += Math.floor(this.game.vy * 0.4);
+                }
             }
         }
         draw(){
@@ -90,7 +92,7 @@ window.addEventListener('load', () => {
             this.max_vy = this.game.platforms[0].height;
             this.vy = this.min_vy;
             this.jump = 0.5;
-            this.image = document.getElementById('player1');
+            this.image = document.getElementById('player');
             this.vx = 0;
             this.max_vx = 5;
         }
@@ -98,9 +100,11 @@ window.addEventListener('load', () => {
         update(inputHandler){
             this.x +=this.vx;
             if(inputHandler.keys.includes('ArrowLeft')){
+                this.image = document.getElementById('playerM');
                 this.vx = -this.max_vx;
             }
             else if(inputHandler.keys.includes('ArrowRight')){
+                this.image = document.getElementById('player');
                 this.vx = this.max_vx;
             }
             else{
@@ -175,6 +179,9 @@ window.addEventListener('load', () => {
                 if(e.key == 'Enter'){
                     this.game.gameStart = true;
                 }
+                if(e.key === 32){
+                    this.game.gameStart = !this.game.gameStart;
+                }
             });
 
             window.addEventListener('keyup', (e) => {
@@ -210,7 +217,6 @@ window.addEventListener('load', () => {
             this.platforms.forEach(platform =>{
                 platform.update();
             });
-
             this.player.update(this.inputHandler);
 
             this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
@@ -233,10 +239,10 @@ window.addEventListener('load', () => {
                 context.font = "bold 70px Arial";
                 context.fillStyle = "Green";
                 context.textAlign = "center";
-                context.fillText(`Your Score is ${this.scorept}`, this.width*0.5, this.height*0.5);
+                context.fillText("Your Score is "+this.scorept, this.width*0.5, this.height*0.5);
                 context.font = "bold 30px Arial";
                 context.fillStyle = "black";
-                context.fillText(`Game End, Load to Restart`, this.width*0.5, this.height*0.5+40);
+                context.fillText("Game End, Load to Restart", this.width*0.5, this.height*0.5+40);
             }
             else{
                 this.platforms.forEach(platform => {
@@ -248,7 +254,7 @@ window.addEventListener('load', () => {
                 context.font = "bold 30px Arial";
                 context.fillStyle = "black";
                 context.textAlign = "start";
-                context.fillText(`Score: ${this.scorept}`, 20, 40);
+                context.fillText("Score: "+this.scorept, 20, 40);
             }
         }
 
@@ -265,8 +271,6 @@ window.addEventListener('load', () => {
     }
     
     const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT);
-
-
 
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
