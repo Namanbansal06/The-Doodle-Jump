@@ -3,14 +3,14 @@ window.addEventListener('load', () => {
     const ctx = canvas.getContext('2d');
     const CANVAS_WIDTH = canvas.width = window.innerWidth;
     const CANVAS_HEIGHT = canvas.height = window.innerHeight;
-    var s=1;
+    var s=true;
     class Background{
         constructor(game){
             this.game = game;
             this.x = 0;
             this.y = 0;
-            this.width =1278;
-            this.height = 680;
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
             this.image = document.getElementById('bg1');
         }
         update(){
@@ -20,6 +20,7 @@ window.addEventListener('load', () => {
             }
             else{
                 this.y += this.game.vy;
+                
                 if(this.game.vy>0){
                     this.game.scorept += Math.floor(this.game.vy * 0.4);
                 }
@@ -37,7 +38,7 @@ window.addEventListener('load', () => {
             this.width = 120;
             this.height = 30;
             this.type = type;
-            this.x = Math.floor(Math.random()*((this.game.width-this.width) + 1));
+            this.x = Math.floor(Math.random()*((this.game.width-this.width)+1));
             this.y =  this.calc_Y(upperY, lowerY);
             this.vx = (this.type == 'blue') ? this.game.object_vx : 0;
             this.image = document.getElementById('tiles');
@@ -84,10 +85,10 @@ window.addEventListener('load', () => {
         constructor(game){
             this.game = game;
             this.width = 60;
-            this.height = 70;
-            this.x = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].x +6;
-            this.y = this.game.platforms.filter(platform => platform.type == 'green').slice(-1)[0].y - this.height;
-            this.min_y = (this.game.height/2)-30;
+            this.height = 75;
+            this.x = this.game.platforms[this.game.platforms.length-1].x + 6;
+            this.y = this.game.platforms[this.game.platforms.length-1].y - this.height;
+            this.min_y = (this.game.height/2);
             this.min_vy = -18;
             this.max_vy = this.game.platforms[0].height;
             this.vy = this.min_vy;
@@ -140,7 +141,7 @@ window.addEventListener('load', () => {
         }
 
         draw(context){
-            // context.strokeRect(this.x+15, this.y, this.width-30, this.height)
+            context.strokeRect(this.x+15, this.y, this.width-30, this.height);
             context.drawImage(this.image, 0, 0, 173, 235, this.x, this.y, this.width, this.height);
         }
 
@@ -174,19 +175,16 @@ window.addEventListener('load', () => {
             
             window.addEventListener('keydown', (e) =>{
                 if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && !this.keys.includes(e.key)){
-                    this.keys.push(e.key)
+                    this.keys.push(e.key);
                 }
                 if(e.key == 'Enter'){
                     this.game.gameStart = true;
-                }
-                if(e.key === 32){
-                    this.game.gameStart = !this.game.gameStart;
                 }
             });
 
             window.addEventListener('keyup', (e) => {
                 if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && this.keys.includes(e.key)){
-                    this.keys.splice(this.keys.indexOf(e.key), 1);
+                    this.keys.pop(e.key);
                 }
             });
         }
@@ -206,7 +204,7 @@ window.addEventListener('load', () => {
             this.add_platforms(0, this.height-30);
             this.add_platforms(-this.height, -30);
             this.introimage = document.getElementById('intro');
-            this.background = new Background(this); 
+            this.background = new Background(this);
             this.player = new Player(this);
             this.inputHandler = new InputHandler(this);
         }
@@ -218,7 +216,6 @@ window.addEventListener('load', () => {
                 platform.update();
             });
             this.player.update(this.inputHandler);
-
             this.platforms = this.platforms.filter(platform => !platform.markedForDeletion);
         }
         draw(context){
@@ -234,7 +231,7 @@ window.addEventListener('load', () => {
             else if(this.player.y> this.width){
                 if(s) {
                     new Audio("Resources/Sounds/losing.wav").play();
-                    s=0;
+                    s=false;
                 }
                 context.font = "bold 70px Arial";
                 context.fillStyle = "Green";
