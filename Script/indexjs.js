@@ -46,7 +46,7 @@ window.addEventListener('load', () => {
             this.x = Math.floor(Math.random() * ((this.game.width-this.width) - + 1));
             this.y = Math.floor(Math.random() * ((-this.height)- (-this.game.height) + 1)) + (-this.game.height);
             this.image = document.getElementById('tiles');
-            this.vx = this.game.object_vx;
+            this.vx = this.game.object_vx*0.9;
             this.audio = new Audio('Resources/Sounds/monsterblizu.mp3');
             this.audio.loop = true;
             this.audio.play();
@@ -58,7 +58,7 @@ window.addEventListener('load', () => {
             this.x += this.vx;
             this.y += this.game.vy;
 
-            if(this.y >= this.game.height){
+            if(this.y >= this.game.height + 2 * this.game.player.height){
                 this.audio.pause();
                 this.markedForDeletion = true;
             }
@@ -135,7 +135,7 @@ window.addEventListener('load', () => {
             this.height = 75*0.9;
             this.x = this.game.platforms[this.game.platforms.length-1].x + 6;
             this.y = this.game.platforms[this.game.platforms.length-1].y - this.height;
-            this.min_y = (this.game.height/2);
+            this.min_y = (this.game.height/1.8);
             this.min_vy = -18;
             this.max_vy = this.game.platforms[0].height;
             this.vy = this.min_vy;
@@ -361,10 +361,6 @@ window.addEventListener('load', () => {
                 context.fillText("Press Enter to Start", this.width*0.5, this.height*0.5);
             }
             else if(this.player.y> this.width || this.gameOver){
-                // if(s) {
-                    
-                //     s=false;
-                // }
                 context.font = "bold 70px Arial";
                 context.fillStyle = "Green";
                 context.textAlign = "center";
