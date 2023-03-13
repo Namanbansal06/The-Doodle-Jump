@@ -3,7 +3,10 @@ window.addEventListener('load', () => {
     const ctx = canvas.getContext('2d');
     const CANVAS_WIDTH = canvas.width = window.innerWidth;
     const CANVAS_HEIGHT = canvas.height = window.innerHeight;
-    var s=true;
+    var charChange=900;
+    var m =0;
+    var pause = false;
+    var color = "black";
     class Background{
         constructor(game){
             this.game = game;
@@ -15,6 +18,14 @@ window.addEventListener('load', () => {
         }
         update(){
             if(this.y > this.height){
+                if(game.scorept%2000 > 1000){
+                    canvas.style.backgroundColor = "#1E035E";
+                    color = "white";
+                }
+                else{
+                    canvas.style.backgroundColor = "rgb(142, 218, 250)";
+                    color = "black";
+                }
                 this.y = 0;
                 this.game.add_platforms(-this.height*2, -30-this.height);
                 this.game.change_difficulty();
@@ -24,10 +35,10 @@ window.addEventListener('load', () => {
                 }
             }
             else{
-                this.y += this.game.vy;
+                this.y += this.game.vy*0.6;
                 
                 if(this.game.vy>0){
-                    this.game.scorept += Math.floor(this.game.vy * 0.4);
+                    this.game.scorept += Math.floor(this.game.vy * 0.12);
                 }
             }
         }
@@ -36,7 +47,6 @@ window.addEventListener('load', () => {
             ctx.drawImage(this.image, this.x, this.y-this.height, this.width, this.height);
         }
     }
-    
     class Enemy{
         constructor(game){
             this.game = game;
@@ -56,7 +66,7 @@ window.addEventListener('load', () => {
         update(){
             if(this.x < 0 || this.x > this.game.width - this.width) this.vx *= -1 
             this.x += this.vx;
-            this.y += this.game.vy;
+            this.y += this.game.vy*0.1;
 
             if(this.y >= this.game.height + 2 * this.game.player.height){
                 this.audio.pause();
@@ -97,7 +107,7 @@ window.addEventListener('load', () => {
                 if(this.x < 0 || this.x > this.game.width - this.width) this.vx = -this.vx;
             }
             this.x += this.vx;
-            this.y += this.game.vy;
+            this.y += this.game.vy*0.6;
 
             if(this.y >= this.game.height + game.player.height*2){
                 this.markedForDeletion = true;
@@ -145,7 +155,6 @@ window.addEventListener('load', () => {
             this.max_vx = 5;
             this.bullets = [];
         }
-
         update(inputHandler){
             this.x +=this.vx;
             if(inputHandler.keys.includes('ArrowLeft')){
@@ -212,13 +221,17 @@ window.addEventListener('load', () => {
 
             this.bullets.forEach(bullet => bullet.update());
             this.bullets = this.bullets.filter(bullet => !bullet.markedForDeletion);
-
         }
 
         draw(context){
             this.bullets.forEach(bullet => bullet.draw(context))
-            // context.strokeRect(this.x+15, this.y, this.width-30, this.height);
-            context.drawImage(this.image, 0, 0, 173, 235, this.x, this.y, this.width, this.height);
+            // context.strokeRect(this.x+13, this.y, this.width-30, this.height);
+            if(game.scorept%charChange > charChange-2){
+                m=m+176;
+                charChange*=2;
+                if(m >= (176*6)) m=0;
+            }
+            context.drawImage(this.image, m, 0, 173, 235, this.x, this.y, this.width, this.height);
         }
 
         collision(){
@@ -293,8 +306,12 @@ window.addEventListener('load', () => {
                 if((e.key == 'ArrowLeft' || e.key == 'ArrowRight') && !this.keys.includes(e.key)){
                     this.keys.push(e.key);
                 }
-                if(e.key == 'Enter'){
-                    this.game.gameStart = true;
+                else if((e.key == 'Enter' || e.key == ' ') && game.gameOver){
+                    location.reload();
+                }
+                else if((e.key == 'Enter' || e.key == ' ')){
+                    this.game.gameStart = !this.game.gameStart;
+                    pause = true;
                 }
             });
 
@@ -353,12 +370,29 @@ window.addEventListener('load', () => {
         draw(context){
             this.background.draw(context);
 
-            if(!this.gameStart){
+            if(!this.gameStart && !pause){
                 context.font = "bold 30px Arial";
-                context.fillStyle = "black";
+                context.fillStyle = color;
                 context.textAlign = "center";
                 context.drawImage(this.introimage, 0, 0, innerWidth, innerHeight);
                 context.fillText("Press Enter to Start", this.width*0.5, this.height*0.5);
+            }
+            else if(!this.gameStart && pause){
+                context.font = "bold 50px Arial";
+                context.fillStyle = color;
+                context.textAlign = "center";
+                context.drawImage(this.introimage, 0, 0, innerWidth, innerHeight);
+                context.fillText("GAME PAUSED", this.width*0.5, this.height*0.5);
+                context.font = "bold 15px Arial";
+                context.fillText("Press Enter to play", this.width*0.5, this.height*0.5+20);
+
+                context.font = "bold 30px Arial";
+                context.fillStyle = color;
+                context.textAlign = "start";
+                context.fillText("Score: "+this.scorept, 20, 40);
+                context.font = "bold 30px Arial";
+                context.textAlign = "right";
+                context.fillText("Next Character at: "+charChange, canvas.width-20, 40);
             }
             else if(this.player.y> this.width || this.gameOver){
                 context.font = "bold 70px Arial";
@@ -366,8 +400,8 @@ window.addEventListener('load', () => {
                 context.textAlign = "center";
                 context.fillText("Your Score is "+this.scorept, this.width*0.5, this.height*0.5);
                 context.font = "bold 30px Arial";
-                context.fillStyle = "black";
-                context.fillText("Game End, Load to Restart", this.width*0.5, this.height*0.5+40);
+                context.fillStyle = color;
+                context.fillText("Game End, Press Enter to Restart", this.width*0.5, this.height*0.5+40);
             }
             else{
                 this.platforms.forEach(platform => {
@@ -381,9 +415,12 @@ window.addEventListener('load', () => {
                 });
 
                 context.font = "bold 30px Arial";
-                context.fillStyle = "black";
+                context.fillStyle = color;
                 context.textAlign = "start";
                 context.fillText("Score: "+this.scorept, 20, 40);
+                context.font = "bold 30px Arial";
+                context.textAlign = "right";
+                context.fillText("Next Character at: "+charChange, canvas.width-20, 40);
             }
         }
 
@@ -426,4 +463,29 @@ window.addEventListener('load', () => {
     }
     animate();
 });
+
+function points()
+{
+    var a=0;
+    var b=0;
+    
+    for(var n=0; n<50; n++){
+        
+        var st=document.getElementById("bgstars");
+        let circle=document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+        a=Math.floor(Math.random()*window.innerWidth);
+        b=Math.floor(Math.random()*window.innerHeight);
+        
+        circle.setAttribute("cx", a);
+        circle.setAttribute("cy", b);
+        circle.setAttribute("r",  1);
+        circle.setAttribute("fill", "white");
+        st.appendChild(circle);
+        
+    }
+    
+}
+
+setTimeout(points, 100);
 
