@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/pranavbisaria/The-Doodle-Jump">
+  <a href="https://github.com/Namanbansal06/The-Doodle-Jump">
     <img src="Resources/DooderJetPack.jpg" alt="Logo" width='150px' height='150px' style='border-radius: 40px'>
   </a>
 <h3 align="center">Doodle Jump</h3>
@@ -177,9 +177,7 @@ Don't forget to give the project a star! Thanks again!
 <a id="contact"></a>
 ## Contact
 
-Pranav Bisaria - [@pranavbisaria29](https://twitter.com/pranavbisaria29) - [pranavbisariya29@gmail.com](mailto:pranavbisariya29@gmail.com)
-
-Project Link: [https://github.com/pranavbisaria/ShopIT-E-Commerce-App](https://github.com/pranavbisaria/ShopIT-E-Commerce-App)
+Naman Bansal - [@naman bansal](https://www.linkedin.com/in/naman-bansal-48a5a3220/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
