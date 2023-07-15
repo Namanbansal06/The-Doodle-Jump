@@ -17,14 +17,14 @@
   <p align="center">
     A JavaScript Based Online Game, that can be played on any browser
     <br />
-    <a href="https://github.com/pranavbisaria/The-Doodle-Jump"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Namanbansal06/The-Doodle-Jump"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://pranavbisaria.github.io/The-Doodle-Jump">View Demo</a>
+    <a href="https://namanbansal06.github.io/The-Doodle-Jump/">View Demo</a>
     ·
-    <a href="https://github.com/pranavbisaria/The-Doodle-Jump/issues">Report Bug</a>
+    <a href="https://github.com/Namanbansal06/The-Doodle-Jump/issues">Report Bug</a>
     ·
-    <a href="https://github.com/pranavbisaria/The-Doodle-Jump/issues">Request Feature</a>
+    <a href="https://github.com/Namanbansal06/The-Doodle-Jump/issues">Request Feature</a>
   </p>
 </div>
 
